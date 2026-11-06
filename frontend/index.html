@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Shop groceries, electronics, baby products, beauty and home essentials at FreshMart Supermarket.">
+  <title>FreshMart Supermarket | Everything you need, all in one place</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="announcement">
+    FREE DELIVERY on orders above ₦100,000 <span>•</span> Fresh deals every day
+  </div>
+  <header class="site-header">
+    <div class="header-main wrap">
+      <button class="icon-btn mobile-menu" id="menuToggle" aria-label="Open menu">☰</button>
+      <a class="brand" href="#">
+        <span class="brand-mark">F</span>
+        <span>Fresh<span class="brand-accent">Mart</span>
+        <small>SUPERMARKET</small></span>
+      </a>
+      <div class="searchbar">
+        <select id="searchCategory" aria-label="Search category">
+          <option value="">All categories</option>
+        </select>
+        <input id="searchInput" placeholder="Search for products, brands and more..." aria-label="Search products">
+        <button id="searchBtn">Search <span>⌕</span></button>
+      </div>
+      <div class="header-actions">
+        <button class="text-action" id="accountBtn">♙ <span>Account</span></button>
+        <button class="cart-action" id="cartBtn">🛒 <span>Cart</span>
+          <b id="cartCount">0</b>
+        </button>
+      </div>
+    </div>
+    <nav class="nav wrap" id="mainNav">
+      <a href="#home">Home</a>
+      <a href="#categories">Categories</a>
+      <a href="#featured">Shop</a>
+      <a href="#about">About us</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+      <span class="nav-hours">◷ Mon–Sat: 8am–9pm</span>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero wrap" id="home">
+      <div class="hero-copy">
+        <span class="eyebrow" id="slideEyebrow">YOUR EVERYDAY MARKETPLACE</span>
+        <h1 id="slideTitle">Everything you need.<br><em>All in one place.</em></h1>
+        <p id="slideText">From farm-fresh groceries to home appliances, discover quality products at prices you'll love.</p>
+        <div class="hero-buttons">
+          <a class="btn btn-light" href="#featured">Shop now <span>→</span></a>
+          <a class="hero-link" href="#categories">Explore categories</a>
+        </div>
+        <div class="slide-dots" id="slideDots">
+          <button class="active" aria-label="Slide 1"></button>
+          <button aria-label="Slide 2"></button>
+          <button aria-label="Slide 3"></button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-photo main-photo"></div>
+        <div class="floating-note"><span>✦</span>
+          <div><b>Quality you can trust</b>
+            <small>Carefully selected for you</small>
+          </div>
+        </div>
+        <div class="hero-stamp">FRESH<br><b>& GOOD</b>
+        </div>
+      </div>
+    </section>
+
+    <section class="benefits wrap">
+      <div>
+        <span>✦</span>
+        <p><b>Quality products</b><small>Chosen with care</small></p>
+      </div>
+      <div>
+        <span>🚚</span>
+        <p><b>Fast delivery</b><small>To your doorstep</small></p>
+      </div>
+      <div>
+        <span>♡</span>
+        <p><b>Great value</b><small>Deals you'll love</small></p>
+      </div>
+      <div>
+        <span>☎</span>
+        <p><b>Here to help</b><small>Friendly support</small></p>
+      </div>
+    </section>
+
+    <section class="section wrap" id="categories">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">SHOP YOUR WAY</span>
+          <h2>Explore our categories</h2>
+        </div>
+        <a class="see-all" href="#featured">View all products →</a>
+      </div>
+      <div class="category-grid" id="categoryGrid"></div>
+    </section>
+
+    <section class="promo-strip wrap">
+      <div>
+        <span class="eyebrow">THE FRESHMART PROMISE</span>
+        <h2>Good choices.<br><em>Great everyday living.</em></h2>
+        <p>Thoughtful essentials for your kitchen, home and family.</p>
+        <a class="btn btn-dark" href="#featured">Discover more →</a>
+      </div>
+      <div class="promo-image"></div>
+    </section>
+
+    <section class="section wrap" id="featured">
+      <div class="section-heading"><div>
+        <span class="eyebrow">HANDPICKED FOR YOU</span>
+        <h2>Featured products</h2>
+        <p class="section-subtitle">Everyday essentials and little treats, all in one place.</p>
+      </div>
+      <a class="see-all" href="#allProducts">See all products →</a></div>
+
+      <div class="filter-bar">
+        <div class="filter-left">
+          <label>Order type <select id="orderType">
+            <option value="all">All products</option>
+            <option value="deal">Special offers</option>
+            <option value="popular">Popular picks</option>
+          </select>
+        </label>
+        <label>Category
+           <select id="categoryFilter">
+            <option value="">All categories</option>
+          </select></label><label>Sort by 
+          <select id="sortFilter">
+            <option value="featured">Featured</option>
+            <option value="low">Price: low to high</option>
+            <option value="high">Price: high to low</option>
+            <option value="rating">Top rated</option>
+          </select>
+        </label>
+      </div>
+      <label class="price-filter">Max price <b id="priceLabel">₦700,000</b>
+        <div>
+          <input type="range" id="priceFilter" min="2000" max="700000" step="1000" value="700000"></label>
+        </div>
+      <div class="product-grid" id="productGrid"></div>
+      <div class="center">
+        <button class="btn btn-outline" id="loadMore">See more products <span>↓</span></button>
+      </div>
+    </section>
+
+    <section class="wide-promo wrap">
+      <div>
+        <span class="eyebrow">A LITTLE SOMETHING EXTRA</span>
+        <h2>Make room for<br><em>the good stuff.</em></h2>
+        <p>Discover new arrivals and limited-time offers.</p>
+        <a href="#featured" class="btn btn-light">Shop the offers →</a>
+      </div>
+    </section>
+
+    <section class="section wrap" id="allProducts">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">POPULAR RIGHT NOW</span>
+          <h2>Trending products</h2>
+        </div>
+        <div>
+          <span class="muted">A few customer favourites</span>
+        </div>
+        <div class="product-grid compact-grid" id="trendingGrid"></div>
+      </div>
+    </section>
+
+    <section class="store-info wrap" id="about">
+      <div>
+        <span class="eyebrow">WELCOME TO FRESHMART</span>
+        <h2>Your neighbourhood store,<br><em>with more to explore.</em></h2>
+        <p>FreshMart brings your everyday shopping together. From pantry staples and fresh food to trusted home appliances, baby essentials and personal care, we make it easier to shop for the things that make life better.</p>
+        <a class="btn btn-dark" href="#contact">Get in touch →</a>
+      </div>
+      <div class="hours-card">
+        <span class="hours-icon">◷</span>
+        <h3>Store opening hours</h3>
+        <div class="hours-row">
+          <span>Monday – Saturday</span>
+          <b>8:00 AM – 9:00 PM</b>
+        </div>
+        <div class="hours-row">
+          <span>Sunday</span>
+          <b>10:00 AM – 7:00 PM</b>
+        </div>
+        <div class="open-status" id="openStatus">Checking store hours...</div>
+        <small>Hours may change on public holidays.</small>
+      </div>
+    </section>
+
+    <section class="section wrap faq-section" id="faq">
+      <div class="section-heading">
+        <span class="eyebrow">NEED A HAND?</span>
+        <h2>Frequently asked questions</h2>
+      </div>
+      <div class="faq-list">
+        <details>
+          <summary>How do I place an order? <span>＋</span></summary>
+          <p>Browse or search for products, add your favourites to the cart, then proceed to checkout. Sign in or create an account to complete your order.</p>
+        </details>
+        <details>
+          <summary>How much is delivery? <span>＋</span></summary>
+          <p>Standard delivery is ₦2,500. Delivery is free on orders of ₦100,000 or more. Your delivery fee is shown before you place the order.</p>
+        </details>
+        <details>
+          <summary>How can I track my order? <span>＋</span></summary>
+          <p>Use the order tracking section and enter the order number shown after checkout. You can also find your order number in your account's order history.</p>
+        </details>
+        <details>
+          <summary>Which payment methods are available? <span>＋</span></summary>
+          <p>This starter version demonstrates checkout without charging money. Paystack or Flutterwave can be connected to accept real card and bank payments.</p>
+        </details>
+        <details>
+          <summary>Can I return an item? <span>＋</span></summary>
+          <p>Contact our support team within 7 days of delivery with your order number and details of the item. Perishable goods may have special return conditions.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="track-section wrap">
+      <div>
+        <span class="eyebrow">WHERE'S MY ORDER?</span>
+        <h2>Good things are<br><em>on their way.</em></h2>
+        <p>Enter your order number to see the latest delivery update.</p>
+      </div>
+      <form id="trackForm" class="track-form">
+        <label for="trackingId">Order tracking number</label>
+        <div>
+          <input id="trackingId" placeholder="e.g. FM-12345678" required>
+          <button class="btn btn-dark">Track order →</button>
+        </div>
+        <p id="trackingResult" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <div class="footer-main wrap">
+      <div class="footer-brand">
+        <a class="brand brand-white" href="#">
+          <span class="brand-mark">F</span>
+          <span>Fresh<span class="brand-accent">Mart</span>
+          <small>SUPERMARKET</small>
+        </a>
+        <p>Everything you need, all in one place. Shop better, live fresher.</p>
+        <p>✉ hello@freshmart.example<br>☎ +234 800 000 0000</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <a href="#categories">Categories</a>
+        <a href="#featured">Shop products</a>
+        <a href="#about">About us</a>
+      </div>
+      <div>
+        <h4>Customer care</h4>
+        <a href="#faq">FAQs</a>
+        <a href="#trackForm">Track an order</a>
+        <a href="mailto:hello@freshmart.example">Contact support</a>
+      </div>
+      <div>
+        <h4>Visit us</h4>
+        <p>Monday–Saturday<br>8:00am–9:00pm</p>
+        <p>Sunday<br>10:00am–7:00pm</p>
+      </div>
+    </div>
+    <div class="footer-bottom wrap">
+      <span>© 2026 FreshMart Supermarket. All rights reserved.</span>
+      <span>Quality • Value • Convenience</span>
+    </div>
+  </footer>
+
+  <div class="overlay" id="overlay"></div>
+  <aside class="drawer" id="cartDrawer">
+    <div class="drawer-head">
+      <h3>Your shopping cart</h3>
+      <button class="close-btn" data-close>×</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="total-row">
+        <span>Subtotal</span><b id="cartSubtotal">₦0</b>
+      </div>
+      <small>Delivery is calculated at checkout. Free delivery on orders of ₦100,000+.</small>
+      <button class="btn btn-dark full" id="checkoutBtn">Proceed to checkout →</button>
+    </div>
+  </aside>
+
+  <div class="modal" id="authModal">
+    <button class="close-btn modal-close" data-close>×</button>
+    <div class="modal-logo">F</div>
+    <span class="eyebrow">WELCOME TO FRESHMART</span>
+    <h2 id="authTitle">Welcome back</h2>
+    <p id="authIntro">Log in to your account to continue shopping.</p>
+    <div class="auth-tabs">
+      <button class="active" data-tab="login">Log in</button>
+      <button data-tab="signup">Create account</button>
+    </div>
+    <form id="authForm">
+      <div id="nameField" class="hidden">
+        <label>Full name<input name="name" placeholder="Your full name"></label>
+      </div>
+      <label>Email address<input name="email" type="email" placeholder="you@example.com" required></label>
+      <div id="phoneField" class="hidden">
+        <label>Phone number<input name="phone" placeholder="+234..."></label>
+      </div>
+      <label>Password<input name="password" type="password" minlength="6" placeholder="At least 6 characters" required></label>
+      <button class="btn btn-dark full" id="authSubmit">Log in →</button>
+      <p class="form-message" id="authMessage"></p>
+    </form>
+  </div>
+  <div class="modal checkout-modal" id="checkoutModal">
+    <button class="close-btn modal-close" data-close>×</button>
+    <span class="eyebrow">ALMOST THERE</span>
+    <h2>Complete your order</h2>
+    <p class="muted">Enter your delivery details below.</p>
+
+    <form id="checkoutForm">
+      <label>
+        Delivery address
+        <textarea name="address" rows="2" required placeholder="House number, street, area, city"></textarea>
+      </label>
+      <label>
+        Phone number
+        <input name="phone" required placeholder="+234...">
+      </label>
+      <label>
+        Payment method
+        <select name="paymentMethod">
+          <option>Demo payment (no money charged)</option>
+          <option>Pay on delivery</option>
+        </select>
+      </label>
+      <div class="checkout-total">
+        <span>Order total</span>
+        <b id="checkoutTotal">₦0</b>
+      </div>
+      <p class="demo-note">Demo checkout only: this version does not collect card details or charge money.</p>
+      <button class="btn btn-dark full">Place demo order →</button>
+      <p class="form-message" id="checkoutMessage"></p>
+    </form>
+  </div>
+
+  <div class="modal success-modal" id="successModal">
+    <div class="success-icon">✓</div>
+    <h2>Order received!</h2>
+    <p>Your demo order has been created successfully.</p>
+    <div class="order-number" id="successOrderId"></div>
+    <p class="muted">Keep this order number to track your delivery.</p>
+    <button class="btn btn-dark full" data-close>Continue shopping</button>
+  </div>
+  <button class="chat-launch" id="chatLaunch" aria-label="Open chat">☏<span>Chat with us</span></button>
+
+  <div class="chat-box" id="chatBox">
+    <div class="chat-head">
+      <div>
+        <b>FreshMart Support</b>
+        <small>We're happy to help</small>
+      </div>
+      <button id="chatClose">×</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="bot-message">Hello! Welcome to FreshMart. How can we help you today?</div>
+    </div>
+    <form id="chatForm">
+      <input id="chatInput" placeholder="Type your message..." required>
+      <button>➤</button>
+    </form>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="/app.js"></script>
+
+</body></html>

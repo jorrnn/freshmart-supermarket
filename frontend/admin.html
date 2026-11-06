@@ -1,0 +1,338 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshMart | Admin Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f3f5f4;color:#202923}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px}
+.login-card{background:white;padding:35px;border-radius:16px;width:min(420px,100%);box-shadow:0 8px 35px #17251b12}
+.brand{font-size:25px;font-weight:800;color:#16834b;margin-bottom:8px}
+.muted{color:#778078;font-size:14px;line-height:1.6}
+.login-card h2{margin:20px 0 8px}
+.field{margin-top:18px}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
+.field input{width:100%;padding:13px;border:1px solid #dce3dd;border-radius:8px}
+.primary{border:0;background:#16834b;color:white;padding:13px 18px;border-radius:8px;font-weight:700}
+.login-card .primary{width:100%;margin-top:22px}
+.error{color:#c62828;font-size:13px;margin-top:12px}
+.dashboard{display:none;min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:235px;background:#17251d;color:white;padding:26px 18px}
+.sidebar .brand{color:#72d69a;margin:0 0 35px 8px}
+.nav-label{font-size:11px;color:#9eafa3;text-transform:uppercase;margin:22px 10px 10px}
+.nav-btn{display:block;width:100%;text-align:left;border:0;background:transparent;color:#dce8df;padding:13px 12px;border-radius:8px;margin:4px 0}
+.nav-btn.active,.nav-btn:hover{background:#2b4233;color:white}
+.main{margin-left:235px;padding:30px;max-width:1600px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:28px}
+.topbar h1{font-size:25px}
+.topbar p{color:#778078;font-size:13px;margin-top:6px}
+.logout{border:1px solid #d9e0da;background:white;padding:10px 15px;border-radius:8px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:25px}
+.stat,.panel{background:white;border:1px solid #e8ede9;border-radius:12px;padding:20px}
+.stat small{color:#778078}
+.stat strong{display:block;font-size:27px;margin-top:12px}
+.stat span{font-size:12px;color:#16834b}
+.panel{margin-bottom:20px;overflow:hidden}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.panel h2{font-size:17px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{text-align:left;padding:13px 12px;border-bottom:1px solid #edf0ed;font-size:13px;vertical-align:middle}
+th{color:#758078;font-size:11px;text-transform:uppercase;background:#fafbfa}
+.status-select{padding:8px;border:1px solid #dce3dd;border-radius:7px;background:white}
+.section{display:none}
+.section.active{display:block}
+.empty{padding:25px;text-align:center;color:#778078}
+.refresh{border:1px solid #dce3dd;background:white;padding:9px 13px;border-radius:8px}
+@media(max-width:900px){
+ .sidebar{position:static;width:auto;padding:15px;display:flex;align-items:center;gap:8px;overflow-x:auto}
+ .sidebar .brand{margin:0 15px 0 0;white-space:nowrap}
+ .nav-label{display:none}
+ .nav-btn{width:auto;white-space:nowrap;margin:0}
+ .main{margin-left:0;padding:20px}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:520px){
+ .main{padding:14px}
+ .topbar{align-items:flex-start}
+ .topbar h1{font-size:21px}
+ .stats{gap:9px}
+ .stat{padding:14px}
+ .stat strong{font-size:21px}
+}
+</style>
+</head>
+<body>
+
+<div class="login-wrap" id="loginView">
+  <form class="login-card" id="loginForm">
+    <div class="brand">FreshMart.</div>
+    <p class="muted">Supermarket administration portal</p>
+    <h2>Administrator Login</h2>
+    <p class="muted">Sign in to manage your store.</p>
+    <div class="field">
+      <label for="email">Admin email</label>
+      <input id="email" type="email" required autocomplete="username">
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" type="password" required autocomplete="current-password">
+    </div>
+    <button class="primary" type="submit" id="loginButton">Sign in</button>
+    <p class="error" id="loginError"></p>
+  </form>
+</div>
+
+<div class="dashboard" id="dashboard">
+  <aside class="sidebar">
+    <div class="brand">FreshMart.</div>
+    <button class="nav-btn active" data-section="overview">▦ Overview</button>
+    <button class="nav-btn" data-section="orders">▤ Orders</button>
+    <button class="nav-btn" data-section="customers">♙ Customers</button>
+    <button class="nav-btn" data-section="products">▧ Products</button>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1 id="pageTitle">Dashboard overview</h1>
+        <p>Manage your FreshMart supermarket.</p>
+      </div>
+      <button class="logout" id="logoutButton">Log out</button>
+    </header>
+
+    <section class="section active" id="overview">
+      <div class="stats">
+        <div class="stat"><small>Total orders</small><strong id="totalOrders">0</strong><span>All customer orders</span></div>
+        <div class="stat"><small>Registered customers</small><strong id="totalCustomers">0</strong><span>Customer accounts</span></div>
+        <div class="stat"><small>Pending orders</small><strong id="pendingOrders">0</strong><span>Awaiting action</span></div>
+        <div class="stat"><small>Order value</small><strong id="orderValue">₦0</strong><span>Excludes cancelled orders; not confirmed payments</span></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Recent orders</h2><button class="refresh" onclick="showSection('orders')">View all</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Order ID</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th></tr></thead>
+          <tbody id="recentOrders"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="section" id="orders">
+      <div class="panel">
+        <div class="panel-head"><h2>Customer orders</h2><button class="refresh" onclick="loadDashboard()">Refresh</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Order</th><th>Customer / phone</th><th>Delivery address</th><th>Items</th><th>Total</th><th>Payment</th><th>Order status</th></tr></thead>
+          <tbody id="ordersTable"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="section" id="customers">
+      <div class="panel">
+        <div class="panel-head"><h2>Registered customers</h2></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th></tr></thead>
+          <tbody id="customersTable"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="section" id="products">
+      <div class="panel">
+        <div class="panel-head"><h2>Product catalogue</h2><span class="muted">Read-only catalogue</span></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Product</th><th>Category</th><th>Unit</th><th>Price</th></tr></thead>
+          <tbody id="productsTable"></tbody>
+        </table></div>
+      </div>
+    </section>
+    <p class="muted" id="pageMessage"></p>
+  </main>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const money = amount => "₦" + Number(amount || 0).toLocaleString("en-NG");
+const dateText = value => value ? new Date(value).toLocaleString() : "—";
+
+async function api(url, options = {}) {
+  const response = await fetch(url, {
+    credentials: "same-origin",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {})
+    }
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || "Something went wrong.");
+  return data;
+}
+
+function showSection(name) {
+  document.querySelectorAll(".section").forEach(section =>
+    section.classList.toggle("active", section.id === name)
+  );
+  document.querySelectorAll(".nav-btn").forEach(button =>
+    button.classList.toggle("active", button.dataset.section === name)
+  );
+  const titles = {
+    overview: "Dashboard overview",
+    orders: "Order management",
+    customers: "Customer management",
+    products: "Product catalogue"
+  };
+  $("pageTitle").textContent = titles[name] || "Dashboard";
+}
+
+document.querySelectorAll(".nav-btn").forEach(button => {
+  button.addEventListener("click", () => showSection(button.dataset.section));
+});
+
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  $("loginError").textContent = "";
+  $("loginButton").disabled = true;
+  $("loginButton").textContent = "Signing in...";
+
+  try {
+    await api("/api/admin/login", {
+      method: "POST",
+      body: JSON.stringify({
+        email: $("email").value.trim(),
+        password: $("password").value
+      })
+    });
+    await openDashboard();
+  } catch (error) {
+    $("loginError").textContent = error.message;
+  } finally {
+    $("loginButton").disabled = false;
+    $("loginButton").textContent = "Sign in";
+  }
+});
+
+async function openDashboard() {
+  $("loginView").style.display = "none";
+  $("dashboard").style.display = "block";
+  await loadDashboard();
+}
+
+async function loadDashboard() {
+  try {
+    const [stats, orders, customers, productList] = await Promise.all([
+      api("/api/admin/stats"),
+      api("/api/admin/orders"),
+      api("/api/admin/customers"),
+      api("/api/admin/products")
+    ]);
+
+    $("totalOrders").textContent = stats.totalOrders;
+    $("totalCustomers").textContent = stats.totalCustomers;
+    $("pendingOrders").textContent = stats.pendingOrders;
+    $("orderValue").textContent = money(stats.totalOrderValue);
+
+    $("recentOrders").innerHTML = orders.slice(0, 6).map(order => `
+      <tr>
+        <td>${escapeHTML(order.id)}</td>
+        <td>${escapeHTML(order.customer?.name || "Customer")}</td>
+        <td>${dateText(order.createdAt)}</td>
+        <td>${money(order.total)}</td>
+        <td>${escapeHTML(order.status)}</td>
+      </tr>
+    `).join("") || '<tr><td colspan="5" class="empty">No orders yet.</td></tr>';
+
+    $("ordersTable").innerHTML = orders.map(order => `
+      <tr>
+        <td>${escapeHTML(order.id)}<br><small>${dateText(order.createdAt)}</small></td>
+        <td>${escapeHTML(order.customer?.name || "Customer")}<br>${escapeHTML(order.customer?.phone || "")}</td>
+        <td>${escapeHTML(order.customer?.address || "—")}</td>
+        <td>${(order.items || []).map(item =>
+          `${escapeHTML(item.name)} × ${Number(item.quantity)}`
+        ).join("<br>")}</td>
+        <td>${money(order.total)}</td>
+        <td>${escapeHTML(order.paymentStatus || "—")}<br><small>${escapeHTML(order.paymentMethod || "")}</small></td>
+        <td>
+          <select class="status-select" data-order-id="${escapeHTML(order.id)}">
+            ${["Order received","Confirmed","Processing","Shipped","Delivered","Cancelled"].map(status =>
+              `<option value="${status}" ${order.status === status ? "selected" : ""}>${status}</option>`
+            ).join("")}
+          </select>
+        </td>
+      </tr>
+    `).join("") || '<tr><td colspan="7" class="empty">No customer orders yet.</td></tr>';
+
+    $("customersTable").innerHTML = customers.map(customer => `
+      <tr>
+        <td>${escapeHTML(customer.name)}</td>
+        <td>${escapeHTML(customer.email)}</td>
+        <td>${escapeHTML(customer.phone || "—")}</td>
+        <td>${dateText(customer.createdAt)}</td>
+      </tr>
+    `).join("") || '<tr><td colspan="4" class="empty">No registered customers yet.</td></tr>';
+
+    $("productsTable").innerHTML = productList.map(product => `
+      <tr>
+        <td>${escapeHTML(product.name)}</td>
+        <td>${escapeHTML(product.category)}</td>
+        <td>${escapeHTML(product.unit)}</td>
+        <td>${money(product.price)}</td>
+      </tr>
+    `).join("");
+
+    document.querySelectorAll(".status-select").forEach(select => {
+      select.addEventListener("change", async () => {
+        select.disabled = true;
+        try {
+          await api("/api/admin/orders/" + encodeURIComponent(select.dataset.orderId), {
+            method: "PATCH",
+            body: JSON.stringify({ status: select.value })
+          });
+          $("pageMessage").textContent = "Order status updated successfully.";
+          await loadDashboard();
+        } catch (error) {
+          alert(error.message);
+          await loadDashboard();
+        }
+      });
+    });
+  } catch (error) {
+    $("pageMessage").textContent = error.message;
+    if (error.message.toLowerCase().includes("admin login")) {
+      $("dashboard").style.display = "none";
+      $("loginView").style.display = "grid";
+    }
+  }
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  })[char]);
+}
+
+$("logoutButton").addEventListener("click", async () => {
+  try { await api("/api/admin/logout", { method: "POST" }); }
+  catch (error) { console.error(error); }
+  $("dashboard").style.display = "none";
+  $("loginView").style.display = "grid";
+  $("password").value = "";
+});
+
+(async function checkExistingLogin() {
+  try {
+    const result = await api("/api/admin/me");
+    if (result.authenticated) await openDashboard();
+  } catch (error) {
+    console.error(error);
+  }
+})();
+</script>
+</body>
+</html>

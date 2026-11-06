@@ -1,0 +1,50 @@
+{
+  "users": [
+    {
+      "id": "607d5265-065f-4fb0-a2d3-5d5cced97b6a",
+      "name": "john",
+      "email": "ikumawoyijohn@gmail.com",
+      "phone": "07078165005",
+      "password": "$2a$10$ZwHOEsliHDkWDMsE2uXHQ.UMJMJKU4jE40a9phu0qvK3oC2y2Mpf.",
+      "createdAt": "2026-11-05T19:42:50.486Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "FM-07811762",
+      "userId": "607d5265-065f-4fb0-a2d3-5d5cced97b6a",
+      "customer": {
+        "address": "awule road d3",
+        "phone": "07078165005"
+      },
+      "items": [
+        {
+          "id": 1,
+          "name": "Premium Long Grain Rice",
+          "price": 28500,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=700"
+        },
+        {
+          "id": 2,
+          "name": "Fresh Red Apples",
+          "price": 6500,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=700"
+        }
+      ],
+      "subtotal": 35000,
+      "deliveryFee": 2500,
+      "total": 37500,
+      "paymentMethod": "Pay on delivery",
+      "paymentStatus": "Demo payment — not charged",
+      "status": "Confirmed",
+      "createdAt": "2026-11-05T19:43:31.762Z",
+      "timeline": [
+        "Order received",
+        "Confirmed"
+      ],
+      "updatedAt": "2026-11-05T19:59:36.462Z"
+    }
+  ]
+}
