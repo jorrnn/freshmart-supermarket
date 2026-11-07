@@ -95,6 +95,7 @@ th{color:#758078;font-size:11px;text-transform:uppercase;background:#fafbfa}
     <button class="nav-btn" data-section="orders">▤ Orders</button>
     <button class="nav-btn" data-section="customers">♙ Customers</button>
     <button class="nav-btn" data-section="products">▧ Products</button>
+    <button class="nav-btn" data-section="messages">✉ Messages <span id="chatUnreadBadge" class="chat-badge">0</span></button>
   </aside>
 
   <main class="main">
@@ -151,13 +152,70 @@ th{color:#758078;font-size:11px;text-transform:uppercase;background:#fafbfa}
         </table></div>
       </div>
     </section>
+
+        
+<section class="section" id="messages">
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Customer support inbox</h2>
+        <p class="muted">Read and reply to customer messages.</p>
+      </div>
+      <button class="refresh" id="refreshChats">Refresh</button>
+    </div>
+
+    <div class="chat-inbox">
+      <div>
+        <h3 style="font-size:14px;margin-bottom:12px">Conversations</h3>
+        <div class="chat-list" id="chatConversationList">
+          <p class="chat-empty">Loading conversations...</p>
+        </div>
+      </div>
+
+      <div class="chat-window">
+        <div class="chat-window-head">
+          <div>
+            <strong id="chatCustomerName">Select a conversation</strong>
+            <small id="chatCustomerInfo">Customer messages will appear here.</small>
+          </div>
+          <button class="refresh" id="chatStatusButton" hidden>
+            Close conversation
+          </button>
+        </div>
+
+        <div class="chat-history" id="adminChatHistory">
+          <p class="chat-empty">Choose a customer conversation to view messages.</p>
+        </div>
+
+        <form class="chat-reply-form" id="adminChatReplyForm">
+          <input
+            id="adminChatReplyInput"
+            type="text"
+            placeholder="Write your reply..."
+            autocomplete="off"
+            required
+            disabled
+          >
+          <button class="primary" id="adminChatSend" type="submit" disabled>
+            Send
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+
     <p class="muted" id="pageMessage"></p>
   </main>
 </div>
 
+<script src="/socket.io/socket.io.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 const money = amount => "₦" + Number(amount || 0).toLocaleString("en-NG");
+let adminChatSocket = null;
+let activeChatConversation = null;
 const dateText = value => value ? new Date(value).toLocaleString() : "—";
 
 async function api(url, options = {}) {
@@ -182,11 +240,16 @@ function showSection(name) {
     button.classList.toggle("active", button.dataset.section === name)
   );
   const titles = {
-    overview: "Dashboard overview",
-    orders: "Order management",
-    customers: "Customer management",
-    products: "Product catalogue"
-  };
+  overview: "Dashboard overview",
+  orders: "Order management",
+  customers: "Customer management",
+  products: "Product catalogue",
+  messages: "Customer support messages"
+};
+
+if (name === "messages") {
+  loadChatConversations();
+}
   $("pageTitle").textContent = titles[name] || "Dashboard";
 }
 
@@ -220,7 +283,9 @@ $("loginForm").addEventListener("submit", async event => {
 async function openDashboard() {
   $("loginView").style.display = "none";
   $("dashboard").style.display = "block";
+
   await loadDashboard();
+  connectAdminChat();
 }
 
 async function loadDashboard() {
@@ -310,6 +375,214 @@ async function loadDashboard() {
   }
 }
 
+
+function connectAdminChat() {
+  if (adminChatSocket) {
+    adminChatSocket.disconnect();
+  }
+
+  adminChatSocket = io();
+
+  adminChatSocket.on("connect", () => {
+    console.log("FreshMart admin chat connected.");
+  });
+
+  adminChatSocket.on("chat:new_message", async event => {
+    await loadChatConversations();
+
+    if (
+      activeChatConversation &&
+      String(activeChatConversation.id) === String(event.conversationId)
+    ) {
+      await loadChatMessages(event.conversationId);
+    }
+  });
+
+  adminChatSocket.on("connect_error", error => {
+    console.error("Admin chat connection error:", error.message);
+  });
+}
+
+async function loadChatConversations() {
+  const list = $("chatConversationList");
+
+  try {
+    const conversations = await api("/api/admin/chat/conversations");
+
+    const unreadTotal = conversations.reduce(
+      (total, conversation) =>
+        total + Number(conversation.unread_admin || 0),
+      0
+    );
+
+    $("chatUnreadBadge").textContent = unreadTotal;
+    $("chatUnreadBadge").style.display = unreadTotal ? "inline-block" : "none";
+
+    if (!conversations.length) {
+      list.innerHTML = '<p class="chat-empty">No customer conversations yet.</p>';
+      return;
+    }
+
+    list.innerHTML = conversations.map(conversation => `
+      <button
+        type="button"
+        class="chat-conversation ${
+          activeChatConversation &&
+          String(activeChatConversation.id) === String(conversation.id)
+            ? "selected" : ""
+        }"
+        data-chat-id="${escapeHTML(conversation.id)}"
+      >
+        <strong>
+          ${escapeHTML(conversation.customer_name || "FreshMart customer")}
+          ${
+            Number(conversation.unread_admin || 0)
+              ? `<span class="chat-unread">${Number(conversation.unread_admin)}</span>`
+              : ""
+          }
+        </strong>
+        <small>${escapeHTML(conversation.last_message || "No messages yet")}</small>
+        <small>
+          ${escapeHTML(conversation.status || "open")} ·
+          ${dateText(conversation.last_message_at || conversation.created_at)}
+        </small>
+      </button>
+    `).join("");
+
+  } catch (error) {
+    list.innerHTML = `<p class="chat-empty">${escapeHTML(error.message)}</p>`;
+  }
+}
+
+async function loadChatMessages(conversationId) {
+  try {
+    const data = await api(
+      "/api/admin/chat/conversations/" +
+      encodeURIComponent(conversationId) +
+      "/messages"
+    );
+
+    activeChatConversation = data.conversation;
+
+    $("chatCustomerName").textContent =
+      data.conversation.customer_name || "FreshMart customer";
+
+    $("chatCustomerInfo").textContent =
+      data.conversation.customer_email || "Customer support conversation";
+
+    const history = $("adminChatHistory");
+
+    if (!data.messages.length) {
+      history.innerHTML = '<p class="chat-empty">No messages in this conversation yet.</p>';
+    } else {
+      history.innerHTML = data.messages.map(message => `
+        <div class="admin-chat-message ${
+          message.sender_type === "admin" ? "admin" : "customer"
+        }">
+          <div>${escapeHTML(message.message)}</div>
+          <small>
+            ${message.sender_type === "admin" ? "You" : "Customer"} ·
+            ${dateText(message.created_at)}
+          </small>
+        </div>
+      `).join("");
+    }
+
+    history.scrollTop = history.scrollHeight;
+
+    const isOpen = data.conversation.status === "open";
+
+    $("chatStatusButton").hidden = false;
+    $("chatStatusButton").textContent =
+      isOpen ? "Close conversation" : "Reopen conversation";
+
+    $("adminChatReplyInput").disabled = !isOpen;
+    $("adminChatSend").disabled = !isOpen;
+    $("adminChatReplyInput").placeholder =
+      isOpen ? "Write your reply..." : "Reopen this conversation to reply.";
+
+    await loadChatConversations();
+
+  } catch (error) {
+    $("adminChatHistory").innerHTML =
+      `<p class="chat-empty">${escapeHTML(error.message)}</p>`;
+  }
+}
+
+$("chatConversationList").addEventListener("click", event => {
+  const button = event.target.closest("[data-chat-id]");
+  if (!button) return;
+
+  loadChatMessages(button.dataset.chatId);
+});
+
+$("refreshChats").addEventListener("click", loadChatConversations);
+
+$("adminChatReplyForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (!activeChatConversation) return;
+
+  const input = $("adminChatReplyInput");
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  const sendButton = $("adminChatSend");
+  sendButton.disabled = true;
+
+  try {
+    const data = await api(
+      "/api/admin/chat/conversations/" +
+      encodeURIComponent(activeChatConversation.id) +
+      "/reply",
+      {
+        method: "POST",
+        body: JSON.stringify({ message })
+      }
+    );
+
+    input.value = "";
+
+    // Show the saved reply immediately.
+    await loadChatMessages(activeChatConversation.id);
+    await loadChatConversations();
+
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    if (activeChatConversation?.status === "open") {
+      sendButton.disabled = false;
+    }
+    input.focus();
+  }
+});
+
+$("chatStatusButton").addEventListener("click", async () => {
+  if (!activeChatConversation) return;
+
+  const newStatus =
+    activeChatConversation.status === "open" ? "closed" : "open";
+
+  try {
+    await api(
+      "/api/admin/chat/conversations/" +
+      encodeURIComponent(activeChatConversation.id),
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: newStatus })
+      }
+    );
+
+    await loadChatMessages(activeChatConversation.id);
+    await loadChatConversations();
+
+  } catch (error) {
+    alert(error.message);
+  }
+});
+
+
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;",
@@ -333,6 +606,7 @@ $("logoutButton").addEventListener("click", async () => {
     console.error(error);
   }
 })();
+
 </script>
 </body>
 </html>

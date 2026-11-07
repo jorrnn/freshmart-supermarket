@@ -108,7 +108,5 @@ function updateHours(){const now=new Date(),day=now.getDay(),mins=now.getHours()
 setInterval(()=>{currentSlide=(currentSlide+1)%slides.length;showSlide()},5500);
 function showSlide(){const s=slides[currentSlide];$("#slideEyebrow").textContent=s.eyebrow;$("#slideTitle").innerHTML=s.title;$("#slideText").textContent=s.text;$(".hero").style.background=s.bg;$(".hero-photo").style.backgroundImage=`url("${s.image}")`;$("#slideDots").querySelectorAll("button").forEach((b,i)=>b.classList.toggle("active",i===currentSlide))}
 $("#slideDots").addEventListener("click",e=>{const i=[...$("#slideDots").children].indexOf(e.target);if(i>=0){currentSlide=i;showSlide()}});
-$("#chatLaunch").addEventListener("click",()=>$("#chatBox").classList.toggle("show"));$("#chatClose").addEventListener("click",()=>$("#chatBox").classList.remove("show"));
-$("#chatForm").addEventListener("submit",async e=>{e.preventDefault();const input=$("#chatInput"),message=input.value.trim();if(!message)return;$("#chatMessages").insertAdjacentHTML("beforeend",`<div class="user-message">${escapeHTML(message)}</div>`);input.value="";try{const data=await api("/api/chat",{method:"POST",body:JSON.stringify({message})});$("#chatMessages").insertAdjacentHTML("beforeend",`<div class="bot-message">${escapeHTML(data.reply)}</div>`)}catch(err){$("#chatMessages").insertAdjacentHTML("beforeend",`<div class="bot-message">Sorry, chat is temporarily unavailable.</div>`)}$("#chatMessages").scrollTop=$("#chatMessages").scrollHeight});
-function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
 init();

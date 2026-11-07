@@ -14,3 +14,159 @@ footer{background:#514078;color:#fff;padding:45px 0 0}.footer-main{display:grid;
 @media(max-width:900px){.header-main{gap:15px}.header-actions span{display:none}.nav{gap:20px}.product-grid,.compact-grid{grid-template-columns:repeat(3,1fr)}.category-grid{grid-template-columns:repeat(3,1fr)}.product-image{height:170px}.filter-bar{align-items:start;flex-direction:column}.price-filter{width:100%}.hero{min-height:340px}.hero-copy{padding-top:40px}.footer-main{gap:25px}}
 @media(max-width:620px){.wrap{width:min(100% - 28px,520px)}.announcement{font-size:9px}.header-main{height:auto;min-height:72px;flex-wrap:wrap;padding:12px 0;gap:12px}.mobile-menu{display:block;font-size:19px;padding:3px}.brand{font-size:21px;margin-right:auto}.brand-mark{width:34px;height:34px;font-size:23px}.header-actions{gap:10px}.searchbar{order:3;flex-basis:100%;max-width:none;height:40px}.searchbar select{max-width:112px;font-size:10px;padding:0 5px}.searchbar input{font-size:10px;padding:0 8px}.searchbar button{padding:0 12px;font-size:10px}.nav{display:none;height:auto;padding:12px 0 17px;align-items:stretch;gap:0;flex-direction:column}.nav.open{display:flex}.nav a{padding:10px 0;border-bottom:1px solid var(--line)}.nav-hours{margin:10px 0}.hero{grid-template-columns:1fr;margin-top:15px}.hero-copy{padding:34px 25px 22px}.hero h1{font-size:39px}.hero-copy p{font-size:12px}.hero-visual{min-height:220px}.hero-stamp{width:72px;height:72px;font-size:9px}.floating-note{bottom:15px}.slide-dots{margin-top:23px}.benefits{grid-template-columns:repeat(2,1fr);padding:20px 0;gap:17px}.benefits>div{justify-content:flex-start}.benefits b{font-size:10px}.benefits small{font-size:9px}.section{padding-top:45px}.section-heading h2,.store-info h2,.track-section h2{font-size:27px}.section-heading{align-items:start;gap:10px}.see-all{font-size:10px;white-space:nowrap;padding-top:15px}.category-grid{grid-template-columns:repeat(3,1fr);gap:8px}.category-card{padding:13px 5px}.category-icon{width:43px;height:43px;font-size:20px}.category-card b{font-size:9px}.promo-strip{grid-template-columns:1fr;margin-top:45px}.promo-strip>div:first-child{padding:27px}.promo-image{min-height:160px}.filter-left{display:grid;grid-template-columns:1fr 1fr;width:100%}.filter-bar select{min-width:0;width:100%}.filter-left label:last-child{grid-column:span 2}.product-grid,.compact-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product-card{padding:8px}.product-image{height:130px}.product-card h3{font-size:11px}.product-price{font-size:12px}.wide-promo{min-height:230px;background-position:60% center}.wide-promo>div{padding:25px}.wide-promo h2{font-size:29px}.store-info{grid-template-columns:1fr;padding:25px;gap:25px;margin-top:50px}.hours-row{font-size:9px}.hours-row b{font-size:9px}.track-section{grid-template-columns:1fr;padding:25px;gap:20px;margin-top:45px;margin-bottom:45px}.track-form>div{flex-direction:column}.track-form .btn{width:100%}.footer-main{grid-template-columns:1fr 1fr;gap:25px 18px}.footer-brand{grid-column:span 2}.footer-bottom{gap:10px;flex-direction:column}.chat-launch{right:13px;bottom:13px}.chat-box{right:13px;bottom:70px}.modal{padding:25px 20px}}
 @media(max-width:360px){.category-grid{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:34px}.header-actions{font-size:11px}}
+
+
+
+.chat-badge {
+  display: inline-block;
+  background: #d94b45;
+  color: white;
+  font-size: 11px;
+  padding: 3px 7px;
+  border-radius: 20px;
+  margin-left: 5px;
+}
+
+.chat-inbox {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.5fr);
+  gap: 16px;
+  min-height: 520px;
+}
+
+.chat-list {
+  border: 1px solid #e8ede9;
+  border-radius: 10px;
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+.chat-conversation {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid #edf0ed;
+  background: white;
+  color: #202923;
+}
+
+.chat-conversation:hover,
+.chat-conversation.selected {
+  background: #edf7f0;
+}
+
+.chat-conversation strong,
+.chat-conversation small {
+  display: block;
+}
+
+.chat-conversation small {
+  color: #778078;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+}
+
+.chat-unread {
+  float: right;
+  background: #16834b;
+  color: white;
+  border-radius: 20px;
+  padding: 3px 7px;
+  font-size: 11px;
+}
+
+.chat-window {
+  border: 1px solid #e8ede9;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  min-height: 520px;
+  background: white;
+  overflow: hidden;
+}
+
+.chat-window-head {
+  padding: 15px;
+  border-bottom: 1px solid #edf0ed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-window-head small {
+  display: block;
+  color: #778078;
+  margin-top: 5px;
+}
+
+.chat-history {
+  flex: 1;
+  padding: 18px;
+  overflow-y: auto;
+  min-height: 300px;
+  max-height: 450px;
+  background: #f8faf8;
+}
+
+.admin-chat-message {
+  width: fit-content;
+  max-width: 85%;
+  padding: 11px 13px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  background: white;
+  border: 1px solid #e8ede9;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.admin-chat-message.admin {
+  margin-left: auto;
+  background: #e5f5eb;
+  border-color: #d1ebda;
+}
+
+.admin-chat-message small {
+  display: block;
+  color: #778078;
+  margin-top: 7px;
+  font-size: 10px;
+}
+
+.chat-reply-form {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #edf0ed;
+}
+
+.chat-reply-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #dce3dd;
+  border-radius: 8px;
+}
+
+.chat-empty {
+  padding: 25px;
+  text-align: center;
+  color: #778078;
+}
+
+@media(max-width:650px) {
+  .chat-inbox {
+    grid-template-columns: 1fr;
+  }
+
+  .chat-list {
+    max-height: 220px;
+  }
+
+  .chat-window {
+    min-height: 450px;
+  }
+}
